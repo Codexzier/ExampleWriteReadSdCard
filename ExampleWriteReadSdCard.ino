@@ -31,8 +31,6 @@ void setup() {
 
   Serial.begin(9600);
 
-  //mCapacity = JSON_ARRAY_SIZE(mCountData) * JSON_OBJECT_SIZE(7);
-
   SdCardCheckAndRemove();
   SdCardCreateFile();
   Serial.println("----------------------------");
@@ -53,13 +51,14 @@ class MeasureData {
     float Humidity;
     float Pressure;
 
+    // print all values 
     void Print() {
       Serial.print("Day "); Serial.print(Day, DEC); Serial.print(" ");
       Serial.print("Month "); Serial.print(Month, DEC); Serial.print(" ");
       Serial.print("Year "); Serial.print(Year, DEC); Serial.print(" ");
 
       Serial.print("Hour "); Serial.print(Hour, DEC); Serial.print(" ");
-      Serial.print("Minut "); Serial.print(Minute, DEC); Serial.print(" ");
+      Serial.print("Minute "); Serial.print(Minute, DEC); Serial.print(" ");
 
       Serial.print("Temperature "); Serial.print(Temperature, DEC); Serial.print(" ");
       Serial.print("Humidity "); Serial.print(Humidity, DEC); Serial.print(" ");
@@ -67,7 +66,6 @@ class MeasureData {
     }
 
     void ReadFromJson(JsonObject measure) {
-     
       Day = measure["Day"];
       Month = measure["Month"];
       Year = measure["Year"];
@@ -86,11 +84,7 @@ void loop() {
   
   if(mReadFile) {
   
-    String str = String();
-    while(mReadFile.available()) {
-      str += String((char)mReadFile.read());
-    }
-    ReadCsvContent(str);
+    ReadCsvContent(mReadFile.readString());
     Serial.println("----------------------------");
   }
   else
@@ -107,7 +101,8 @@ void loop() {
 // ========================================================================================
 // check the selected sd card start and remove exist file
 void SdCardCheckAndRemove() {
-    if(!SD.begin(mChipSelect)) {
+  
+  if(!SD.begin(mChipSelect)) {
     Serial.println("error - SD can not start"); 
     while(1) ;
   }
