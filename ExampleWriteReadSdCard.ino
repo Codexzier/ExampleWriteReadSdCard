@@ -20,16 +20,23 @@ Sd2Card mCard;
 // WeMos Micro SD Shield V1.0.0: D8
 // LOLIN Micro SD Shield V1.2.0: D4 (Default)
 const int mChipSelect = D4;
-String mFilename = String("weather.txt");
+String mFilename = String("mydata");
 
 File mReadFile;
 
 const int mCountData = 12;
 
+int mCount = 0;
+
 // ========================================================================================
 void setup() {
 
   Serial.begin(9600);
+
+  Serial.print("Size of int:"); Serial.println(sizeof(int), DEC);
+  Serial.print("Size of int16: "); Serial.println(sizeof(int16_t), DEC);
+  Serial.print("Size of int32: "); Serial.println(sizeof(int32_t), DEC);
+  Serial.print("Size of float: "); Serial.println(sizeof(float), DEC);
 
   SdCardCheckAndRemove();
   SdCardCreateFile();
@@ -96,6 +103,9 @@ void loop() {
 
   Serial.println();
   delay(1000);
+
+  Serial.print("Loop: "); Serial.println(mCount, DEC);
+  mCount++;
 }
 
 // ========================================================================================
@@ -147,7 +157,9 @@ void SdCardCreateFile(){
     measure["Minute"] = 0;
     measure["Temperature"] = 21.4f  * i;
     measure["Humidity"] = 50.5f * i;
-    measure["Pressure"] = 12345.0f * i;
+    measure["Pressure"] = 12345.6f * i;
+
+    Serial.print("Add data: "); Serial.println(i, DEC);
   }
   
   mReadFile = SD.open(mFilename, FILE_WRITE);
